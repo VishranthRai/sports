@@ -8,8 +8,8 @@
   --text: #ffffff;
   --text-dim: #a0a0a0;
   --accent: #ff0055;
-  --glass: rgba(255, 255, 255, 0.03);
-  --border: rgba(255, 255, 255, 0.1);
+  --glass: rgba(0, 0, 0, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
   --font-main: 'Outfit', sans-serif;
 }
 
@@ -25,6 +25,32 @@ body {
   font-family: var(--font-main);
   overflow-x: hidden;
   line-height: 1.6;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(rgba(5, 5, 5, 0.7), rgba(5, 5, 5, 0.9)),
+    url('/sports-wallpaper.png') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+  animation: backgroundPulse 20s infinite alternate ease-in-out;
+}
+
+@keyframes backgroundPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.05);
+  }
 }
 
 h1,
@@ -35,12 +61,20 @@ h3 {
   letter-spacing: -0.02em;
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Glassmorphism */
 .glass {
   background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .gradient-text {
@@ -53,20 +87,21 @@ h3 {
 .btn-primary {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   color: white;
-  padding: 12px 32px;
+  padding: 14px 36px;
   border-radius: 50px;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 242, 255, 0.4);
 }
 
 .red-black-heading {
@@ -74,49 +109,61 @@ h3 {
   text-transform: uppercase;
   font-size: 5rem;
   font-weight: 900;
-  text-shadow:
-    3px 3px 0px #ff0000,
-    -3px -3px 0px #000;
+  text-shadow: 3px 3px 0px #ff0000, -3px -3px 0px #000;
   position: relative;
-  animation: glitch-pulse 1.5s infinite alternate;
+  animation: glitch-pulse 2s infinite alternate ease-in-out;
   letter-spacing: -2px;
 }
 
 @keyframes glitch-pulse {
   0% {
-    text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #000;
     transform: skew(0deg);
+    text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #000;
   }
 
   20% {
-    text-shadow: -3px 2px 0px #ff0000, 3px -2px 0px #000;
     transform: skew(1deg);
+    text-shadow: -3px 2px 0px #ff0000, 3px -2px 0px #000;
   }
 
-  40% {
+  50% {
+    transform: skew(-1deg);
     text-shadow: 2px -3px 0px #ff0000, -2px 3px 0px #000;
   }
 
-  60% {
-    text-shadow: -2px -2px 0px #ff0000, 2px 2px 0px #000;
-    transform: skew(-1deg);
-  }
-
   100% {
-    text-shadow: 5px 5px 15px rgba(255, 0, 0, 0.8), -5px -5px 15px rgba(0, 0, 0, 0.8);
     transform: skew(0deg);
+    text-shadow: 5px 5px 20px rgba(255, 0, 0, 0.6);
   }
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+/* Sporting Animations */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.reveal {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.score-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.score-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-10px) scale(1.03);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 242, 255, 0.15);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -124,36 +171,11 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: linear-gradient(var(--primary), var(--secondary));
   border-radius: 10px;
+  border: 2px solid var(--bg);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-main>* {
-  animation: fadeIn 0.8s ease forwards;
-}
-
-.score-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.score-card:hover {
-  border-color: var(--primary);
-  transform: scale(1.02);
-  background: rgba(255, 255, 255, 0.08);
+section {
+  padding: 100px 0;
 }
